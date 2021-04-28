@@ -1,17 +1,12 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using ShowsService.Rabbit;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using ShowsService.Repositories;
+using ShowsService.Repositories.Interfaces;
 
 namespace ShowsService
 {
@@ -37,6 +32,12 @@ namespace ShowsService
             {
                 options.AddDefaultPolicy(builder =>
                 builder.WithOrigins("https://localhost:5001"));
+            });
+
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = Configuration.GetConnectionString("Redis");
+                options.InstanceName = "ShowService_";
             });
         }
 

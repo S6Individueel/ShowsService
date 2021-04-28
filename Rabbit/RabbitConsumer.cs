@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using ShowsService.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,9 +15,10 @@ namespace ShowsService.Rabbit
     public class RabbitConsumer : BackgroundService
     {
         private readonly ILogger<RabbitConsumer> _logger;
-
+        private readonly IShowRepository _showRepository;
         public RabbitConsumer(ILogger<RabbitConsumer> logger)
         {
+           
             _logger = logger;
         }
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -45,13 +47,13 @@ namespace ShowsService.Rabbit
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
-                channel.ExchangeDeclare(exchange: "topic_logs", type: "topic");         //EXCHANGE creation
+                channel.ExchangeDeclare(exchange: "topic_exchange", type: "topic");         //EXCHANGE creation
 
                 var queueName = channel.QueueDeclare().QueueName;                       //QUEUE creation with random name
 
                 channel.QueueBind(queue: queueName,
-                                  exchange: "topic_logs",
-                                  routingKey: "shows.trending");                    //BINDING creation
+                                  exchange: "topic_exchange",
+                                  routingKey: "shows.*.trending");                    //BINDING creation
 
                 Console.WriteLine(" [*] Waiting for messages. To exit press CTRL+C");
 
