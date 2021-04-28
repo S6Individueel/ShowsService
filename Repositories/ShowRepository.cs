@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using AnimeService.DTOs;
+using Newtonsoft.Json;
 
 namespace ShowsService.Repositories
 {
@@ -43,21 +44,15 @@ namespace ShowsService.Repositories
             return "Show is saved";
         }
 
-
-        public async Task<string> GetTrendingAnimesAsync()
+        public async Task<IList<ShowDTO>> GetTrendingShowsAsync(string key)
         {
-            var result = await cache.GetShowAsync<String>("Anime");
-
-            if (result is null) {result = "Does not exist";}
-            return result;
-        }
-
-        public async Task<string> GetTrendingMoviesAsync()
-        {
-            var result = await cache.GetShowAsync<String>("Movie");
+            var result = await cache.GetShowAsync<String>(key);
 
             if (result is null) { result = "Does not exist"; }
-            return result;
+
+            IList<ShowDTO> showList = JsonConvert.DeserializeObject<List<ShowDTO>>(result);
+
+            return showList;
         }
     }
 }

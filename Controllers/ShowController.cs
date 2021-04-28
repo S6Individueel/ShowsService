@@ -26,15 +26,15 @@ namespace ShowsService.Controllers
         }
 
         [HttpGet("trending/anime")]
-        public async Task<string> GetTrendingAnimesAsync()
+        public async Task<IList<ShowDTO>> GetTrendingAnimesAsync()
         {
-            return await _showRepository.GetTrendingAnimesAsync();
+            return await _showRepository.GetTrendingShowsAsync("Anime");
         }
         
         [HttpGet("trending/movie")]
-        public async Task<string> GetTrendingMoviesAsync()
+        public async Task<IList<ShowDTO>> GetTrendingMoviesAsync()
         {
-            return await _showRepository.GetTrendingMoviesAsync();
+            return await _showRepository.GetTrendingShowsAsync("Movie");
         }
     }
 }
