@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace ShowsService.Repositories.Interfaces
 {
-    interface IShowRepository
+    public interface IShowRepository
     {
         Task<string> SetShowAsync(string id);
         Task<string> GetShowAsync(string id);
-        Task<string> SetShowsTrendingAsync(string data);
-        Task<string> GetShowsTrendingAsync(string key);
+        Task<string> GetTrendingAnimesAsync();
+        Task<string> GetTrendingMoviesAsync();
     }
 }

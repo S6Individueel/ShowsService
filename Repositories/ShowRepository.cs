@@ -42,29 +42,22 @@ namespace ShowsService.Repositories
             }
             return "Show is saved";
         }
-        public async Task<string> GetShowsTrendingAsync(string key)
+
+
+        public async Task<string> GetTrendingAnimesAsync()
         {
-            // TODO: Opslaan van een lijst (Anime) in redis en het ophalen daarvan.
-            // Kijkende of ik een collectie op kan slaan van Trending --> [Anime], [Movies] --> [{ShowData per Anime/Movie}]
-            // Hiermee kan ik dan een GetAllTrending met {key} Anime of {key} Movie doen om zo data te verkrijgen.  
-            return "e";
+            var result = await cache.GetShowAsync<String>("Anime");
+
+            if (result is null) {result = "Does not exist";}
+            return result;
         }
 
-        public async Task<string> SetShowsTrendingAsync(string data)
+        public async Task<string> GetTrendingMoviesAsync()
         {
-            IList<JToken> results = JObject.Parse(data)["shows.trending"].Children().ToList(); //Parses content, gets the "top" list and converts to list.
+            var result = await cache.GetShowAsync<String>("Movie");
 
-            if (results is null)
-            {
-                return "Error, incorrect show data";
-            }
-            foreach (JToken show in results)
-            {
-                ShowDTO topShow = show.ToObject<ShowDTO>();
-                await cache.SetShowAsync(topShow.Id.ToString(), topShow);
-            }
-
-            return "Show data set in database!";
+            if (result is null) { result = "Does not exist"; }
+            return result;
         }
     }
 }
