@@ -33,5 +33,14 @@ namespace ShowsService.Extensions
 
             return JsonSerializer.Deserialize<T>(jsonData);
         }
+        public static String GenerateKey(this string mediaType)
+        {
+            if (mediaType == "TV" || mediaType == "ONA" || mediaType == "OVA")
+            { return "Anime"; }
+            else if (mediaType == "movie")
+            { return "Movie"; }
+
+            return "";
+        }
     }
 }

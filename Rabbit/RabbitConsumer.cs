@@ -1,7 +1,11 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using AnimeService.DTOs;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using ShowsService.Extensions;
 using ShowsService.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -15,10 +19,10 @@ namespace ShowsService.Rabbit
     public class RabbitConsumer : BackgroundService
     {
         private readonly ILogger<RabbitConsumer> _logger;
-        private readonly IShowRepository _showRepository;
-        public RabbitConsumer(ILogger<RabbitConsumer> logger)
+        private readonly IDistributedCache cache;
+        public RabbitConsumer(ILogger<RabbitConsumer> logger, IDistributedCache distributedCache)
         {
-           
+            cache = distributedCache;
             _logger = logger;
         }
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -58,11 +62,16 @@ namespace ShowsService.Rabbit
                 Console.WriteLine(" [*] Waiting for messages. To exit press CTRL+C");
 
                 var consumer = new EventingBasicConsumer(channel);
-                consumer.Received += (model, ea) =>                                     //MESSAGE RECEIVING HANDLER
+                consumer.Received += async (model, ea) =>                                     //MESSAGE RECEIVING HANDLER
                 {
                     var body = ea.Body.ToArray();
                     var message = Encoding.UTF8.GetString(body);
                     var routingKey = ea.RoutingKey;
+
+                    List<ShowDTO> trendingShows = JsonConvert.DeserializeObject<List<ShowDTO>>(message);//TODO: Alles  behalve title en url is null maar in message niet???
+                    
+                    await cache.SetShowAsync<String>(trendingShows[0].Media_type.GenerateKey(), message, TimeSpan.FromHours(12), TimeSpan.FromMinutes(12));
+                    
                     Console.WriteLine(" [x] Received '{0}':'{1}'",
                                       routingKey,
                                       message);
