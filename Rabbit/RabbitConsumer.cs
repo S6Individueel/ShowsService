@@ -70,7 +70,7 @@ namespace ShowsService.Rabbit
 
                     List<ShowDTO> trendingShows = JsonConvert.DeserializeObject<List<ShowDTO>>(message);//TODO: Alles  behalve title en url is null maar in message niet???
                     
-                    await cache.SetShowAsync<String>(trendingShows[0].Media_type.GenerateKey(), message, TimeSpan.FromHours(12), TimeSpan.FromMinutes(12));
+                    await cache.SetShowAsync<String>(trendingShows[0].Media_type.GenerateKey(), message, TimeSpan.FromHours(12), TimeSpan.FromHours(12));
                     
                     Console.WriteLine(" [x] Received '{0}':'{1}'",
                                       routingKey,
