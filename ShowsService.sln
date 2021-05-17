@@ -3,7 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31005.135
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShowsService", "ShowsService.csproj", "{4F09ABE9-740F-46A4-B208-3F565E2A1E66}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShowsService", "ShowsService.csproj", "{4F09ABE9-740F-46A4-B208-3F565E2A1E66}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OMDB-Service", "..\OMDB-Service\OMDB-Service.csproj", "{0F262695-8676-4591-813E-D47205AC40E6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AnimeService", "..\AnimeService\AnimeService.csproj", "{00E36573-2323-4B9B-97DC-7BD253229293}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API-Gateway", "..\API-Gateway\API-Gateway.csproj", "{849CFEED-E486-4DDC-8DE9-6C45CA52D1D6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +21,18 @@ Global
 		{4F09ABE9-740F-46A4-B208-3F565E2A1E66}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4F09ABE9-740F-46A4-B208-3F565E2A1E66}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4F09ABE9-740F-46A4-B208-3F565E2A1E66}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F262695-8676-4591-813E-D47205AC40E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F262695-8676-4591-813E-D47205AC40E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F262695-8676-4591-813E-D47205AC40E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F262695-8676-4591-813E-D47205AC40E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00E36573-2323-4B9B-97DC-7BD253229293}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00E36573-2323-4B9B-97DC-7BD253229293}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00E36573-2323-4B9B-97DC-7BD253229293}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00E36573-2323-4B9B-97DC-7BD253229293}.Release|Any CPU.Build.0 = Release|Any CPU
+		{849CFEED-E486-4DDC-8DE9-6C45CA52D1D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{849CFEED-E486-4DDC-8DE9-6C45CA52D1D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{849CFEED-E486-4DDC-8DE9-6C45CA52D1D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{849CFEED-E486-4DDC-8DE9-6C45CA52D1D6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
