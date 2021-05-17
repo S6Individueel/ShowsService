@@ -1,7 +1,12 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using AnimeService.DTOs;
+using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using ShowsService.Extensions;
+using ShowsService.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,9 +19,10 @@ namespace ShowsService.Rabbit
     public class RabbitConsumer : BackgroundService
     {
         private readonly ILogger<RabbitConsumer> _logger;
-
-        public RabbitConsumer(ILogger<RabbitConsumer> logger)
+        private readonly IDistributedCache cache;
+        public RabbitConsumer(ILogger<RabbitConsumer> logger, IDistributedCache distributedCache)
         {
+            cache = distributedCache;
             _logger = logger;
         }
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -45,22 +51,27 @@ namespace ShowsService.Rabbit
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
-                channel.ExchangeDeclare(exchange: "topic_logs", type: "topic");         //EXCHANGE creation
+                channel.ExchangeDeclare(exchange: "topic_exchange", type: "topic");         //EXCHANGE creation
 
                 var queueName = channel.QueueDeclare().QueueName;                       //QUEUE creation with random name
 
                 channel.QueueBind(queue: queueName,
-                                  exchange: "topic_logs",
-                                  routingKey: "shows.trending");                    //BINDING creation
+                                  exchange: "topic_exchange",
+                                  routingKey: "shows.*.trending");                    //BINDING creation
 
                 Console.WriteLine(" [*] Waiting for messages. To exit press CTRL+C");
 
                 var consumer = new EventingBasicConsumer(channel);
-                consumer.Received += (model, ea) =>                                     //MESSAGE RECEIVING HANDLER
+                consumer.Received += async (model, ea) =>                                     //MESSAGE RECEIVING HANDLER
                 {
                     var body = ea.Body.ToArray();
                     var message = Encoding.UTF8.GetString(body);
                     var routingKey = ea.RoutingKey;
+
+                    List<ShowDTO> trendingShows = JsonConvert.DeserializeObject<List<ShowDTO>>(message);//TODO: Alles  behalve title en url is null maar in message niet???
+                    
+                    await cache.SetShowAsync<String>(trendingShows[0].Media_type.GenerateKey(), message, TimeSpan.FromHours(12), TimeSpan.FromMinutes(12));
+                    
                     Console.WriteLine(" [x] Received '{0}':'{1}'",
                                       routingKey,
                                       message);
