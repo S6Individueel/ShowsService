@@ -31,7 +31,9 @@ namespace ShowsService.Rabbit
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                var factory = new ConnectionFactory() { HostName = "rabbitmq" };
+                Console.WriteLine("Sleeping for Rabbit...");
+                await Task.Delay(TimeSpan.FromSeconds(20));
+                var factory = new ConnectionFactory() { HostName = "localhost" };
                 using (var connection = factory.CreateConnection())
                 using (var channel = connection.CreateModel())
                 {
