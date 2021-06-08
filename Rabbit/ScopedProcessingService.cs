@@ -31,48 +31,48 @@ namespace ShowsService.Rabbit
         {
             while (!stoppingToken.IsCancellationRequested)
             {
+
                 Console.WriteLine("Sleeping for Rabbit...");
                 await Task.Delay(TimeSpan.FromSeconds(20));
                 _logger.LogInformation(
                 "Scoped Processing Service is working for SHOWSSERVICE");
-                var factory = new ConnectionFactory() { HostName = "rabbitmq", Port = 5672, DispatchConsumersAsync = true };
-                using (var connection = factory.CreateConnection())
-                using (var channel = connection.CreateModel())
+                var factory = new ConnectionFactory() { HostName = "localhost", Port = 5672, DispatchConsumersAsync = true, 
+                    AutomaticRecoveryEnabled = true, NetworkRecoveryInterval = TimeSpan.FromSeconds(15) };
+                IConnection connection = factory.CreateConnection();
+                IModel channel = connection.CreateModel();
+                channel.ExchangeDeclare(exchange: "topic_exchange", type: "topic");         //EXCHANGE creation
+
+                var queueName = channel.QueueDeclare().QueueName;                       //QUEUE creation with random name
+
+                channel.QueueBind(queue: queueName,
+                                  exchange: "topic_exchange",
+                                  routingKey: "shows.*.trending");                    //BINDING creation
+
+                Console.WriteLine(" [*] Waiting for messages. To exit press CTRL+C");
+
+                var consumer = new EventingBasicConsumer(channel);
+                consumer.Received += async (model, ea) =>                                     //MESSAGE RECEIVING HANDLER
                 {
-                    channel.ExchangeDeclare(exchange: "topic_exchange", type: "topic");         //EXCHANGE creation
+                    var body = ea.Body.ToArray();
+                    var message = Encoding.UTF8.GetString(body);
+                    var routingKey = ea.RoutingKey;
 
-                    var queueName = channel.QueueDeclare().QueueName;                       //QUEUE creation with random name
-
-                    channel.QueueBind(queue: queueName,
-                                      exchange: "topic_exchange",
-                                      routingKey: "shows.*.trending");                    //BINDING creation
-
-                    Console.WriteLine(" [*] Waiting for messages. To exit press CTRL+C");
-
-                    var consumer = new EventingBasicConsumer(channel);
-                    consumer.Received += async (model, ea) =>                                     //MESSAGE RECEIVING HANDLER
-                    {
-                        var body = ea.Body.ToArray();
-                        var message = Encoding.UTF8.GetString(body);
-                        var routingKey = ea.RoutingKey;
-
-                        List<ShowDTO> trendingShows = JsonConvert.DeserializeObject<List<ShowDTO>>(message);//TODO: Alles  behalve title en url is null maar in message niet???
+                    List<ShowDTO> trendingShows = JsonConvert.DeserializeObject<List<ShowDTO>>(message);//TODO: Alles  behalve title en url is null maar in message niet???
 
                         await cache.SetShowAsync<String>(trendingShows[0].Media_type.GenerateKey(), message, TimeSpan.FromHours(24), TimeSpan.FromHours(24));
 
-                        Console.WriteLine(" [x] Received '{0}':'{1}'",
-                                          routingKey,
-                                          message);
-                    };
-                    channel.BasicConsume(queue: queueName,
-                                         autoAck: true,
-                                         consumer: consumer);
+                    Console.WriteLine(" [x] Received '{0}':'{1}'",
+                                      routingKey,
+                                      message);
+                };
+                channel.BasicConsume(queue: queueName,
+                                     autoAck: true,
+                                     consumer: consumer);
 
-                    Console.WriteLine(" Press [enter] to exit.");
-                    Console.ReadLine();
-                }
-                await Task.Delay(TimeSpan.FromHours(hoursTillUpdate), stoppingToken);
+                Console.WriteLine(" Press [enter] to exit.");
+                Console.ReadLine();
             }
+            await Task.Delay(TimeSpan.FromHours(hoursTillUpdate), stoppingToken);
         }
     }
 }

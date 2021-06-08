@@ -27,6 +27,7 @@ namespace ShowsService
 */            services.AddSingleton<IShowRepository, ShowRepository>();
             services.AddHostedService<ConsumeScopedServiceHostedService>();
             services.AddScoped<IScopedProcessingService, ScopedProcessingService>();
+
             services.AddControllers(options => {
                 options.SuppressAsyncSuffixInActionNames = false;
             });
@@ -56,7 +57,8 @@ namespace ShowsService
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ShowsService v1"));
             }
-
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ShowsService v1"));
             app.UseHttpsRedirection();
 
             app.UseRouting();
