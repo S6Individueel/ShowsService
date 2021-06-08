@@ -24,6 +24,8 @@ namespace ShowsService
         {
             services.AddHostedService<RabbitConsumer>();
             services.AddSingleton<IShowRepository, ShowRepository>();
+/*            services.AddHostedService<ConsumeScopedServiceHostedService>();
+            services.AddScoped<IScopedProcessingService, ScopedProcessingService>();*/
             services.AddControllers(options => {
                 options.SuppressAsyncSuffixInActionNames = false;
             });

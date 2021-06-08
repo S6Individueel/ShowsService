@@ -6,7 +6,7 @@ using ShowsService.Extensions;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
-using AnimeService.DTOs;
+using ShowsService.DTOs;
 using Newtonsoft.Json;
 
 namespace ShowsService.Repositories

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AnimeService.DTOs
+namespace ShowsService.DTOs
 {
     public class ShowDTO
     {

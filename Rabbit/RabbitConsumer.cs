@@ -1,4 +1,4 @@
-﻿using AnimeService.DTOs;
+﻿using ShowsService.DTOs;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -69,9 +69,9 @@ namespace ShowsService.Rabbit
                     var routingKey = ea.RoutingKey;
 
                     List<ShowDTO> trendingShows = JsonConvert.DeserializeObject<List<ShowDTO>>(message);//TODO: Alles  behalve title en url is null maar in message niet???
-                    
+
                     await cache.SetShowAsync<String>(trendingShows[0].Media_type.GenerateKey(), message, TimeSpan.FromHours(12), TimeSpan.FromHours(12));
-                    
+
                     Console.WriteLine(" [x] Received '{0}':'{1}'",
                                       routingKey,
                                       message);

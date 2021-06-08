@@ -1,4 +1,4 @@
-﻿using AnimeService.DTOs;
+﻿using ShowsService.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
