@@ -47,7 +47,7 @@ namespace ShowsService.Rabbit
 
         public void UpdateInfo()
         {
-            var factory = new ConnectionFactory() { HostName = "localhost" };
+            var factory = new ConnectionFactory() { HostName = "rabbitmq" };
             using (var connection = factory.CreateConnection())
             using (var channel = connection.CreateModel())
             {
