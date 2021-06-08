@@ -33,7 +33,9 @@ namespace ShowsService.Rabbit
             {
                 Console.WriteLine("Sleeping for Rabbit...");
                 await Task.Delay(TimeSpan.FromSeconds(20));
-                var factory = new ConnectionFactory() { HostName = "localhost" };
+                _logger.LogInformation(
+                "Scoped Processing Service is working for SHOWSSERVICE");
+                var factory = new ConnectionFactory() { HostName = "rabbitmq", DispatchConsumersAsync = true };
                 using (var connection = factory.CreateConnection())
                 using (var channel = connection.CreateModel())
                 {
