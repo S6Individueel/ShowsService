@@ -35,7 +35,7 @@ namespace ShowsService.Rabbit
                 await Task.Delay(TimeSpan.FromSeconds(20));
                 _logger.LogInformation(
                 "Scoped Processing Service is working for SHOWSSERVICE");
-                var factory = new ConnectionFactory() { HostName = "host.docker.internal", Port = 5672, DispatchConsumersAsync = true };
+                var factory = new ConnectionFactory() { HostName = "rabbitmq", Port = 5672, DispatchConsumersAsync = true };
                 using (var connection = factory.CreateConnection())
                 using (var channel = connection.CreateModel())
                 {
