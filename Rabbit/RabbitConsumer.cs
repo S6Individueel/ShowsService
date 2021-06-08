@@ -1,4 +1,4 @@
-﻿using ShowsService.DTOs;
+﻿/*using ShowsService.DTOs;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -86,3 +86,4 @@ namespace ShowsService.Rabbit
         }
     }
 }
+*/

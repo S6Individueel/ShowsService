@@ -1,4 +1,4 @@
-﻿/*using Microsoft.Extensions.Caching.Distributed;
+﻿using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
@@ -18,7 +18,7 @@ namespace ShowsService.Rabbit
     internal class ScopedProcessingService : IScopedProcessingService
     {
         private int executionCount = 0;
-        private readonly double hoursTillUpdate = 500; 
+        private readonly double hoursTillUpdate = 500;
         private readonly ILogger _logger;
         private readonly IDistributedCache cache;
 
@@ -31,7 +31,7 @@ namespace ShowsService.Rabbit
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                var factory = new ConnectionFactory() { HostName = "localhost" };
+                var factory = new ConnectionFactory() { HostName = "rabbitmq" };
                 using (var connection = factory.CreateConnection())
                 using (var channel = connection.CreateModel())
                 {
@@ -54,7 +54,7 @@ namespace ShowsService.Rabbit
 
                         List<ShowDTO> trendingShows = JsonConvert.DeserializeObject<List<ShowDTO>>(message);//TODO: Alles  behalve title en url is null maar in message niet???
 
-                        await cache.SetShowAsync<String>(trendingShows[0].Media_type.GenerateKey(), message, TimeSpan.FromHours(12), TimeSpan.FromHours(12));
+                        await cache.SetShowAsync<String>(trendingShows[0].Media_type.GenerateKey(), message, TimeSpan.FromHours(24), TimeSpan.FromHours(24));
 
                         Console.WriteLine(" [x] Received '{0}':'{1}'",
                                           routingKey,
@@ -72,4 +72,3 @@ namespace ShowsService.Rabbit
         }
     }
 }
-*/

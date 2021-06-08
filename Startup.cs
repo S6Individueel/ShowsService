@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using ShowsService.Rabbit;
+using ShowsService.Rabbit.Interfaces;
 using ShowsService.Repositories;
 using ShowsService.Repositories.Interfaces;
 
@@ -22,10 +23,10 @@ namespace ShowsService
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddHostedService<RabbitConsumer>();
-            services.AddSingleton<IShowRepository, ShowRepository>();
-/*            services.AddHostedService<ConsumeScopedServiceHostedService>();
-            services.AddScoped<IScopedProcessingService, ScopedProcessingService>();*/
+/*            services.AddHostedService<RabbitConsumer>();
+*/            services.AddSingleton<IShowRepository, ShowRepository>();
+            services.AddHostedService<ConsumeScopedServiceHostedService>();
+            services.AddScoped<IScopedProcessingService, ScopedProcessingService>();
             services.AddControllers(options => {
                 options.SuppressAsyncSuffixInActionNames = false;
             });
