@@ -36,8 +36,14 @@ namespace ShowsService.Rabbit
                 await Task.Delay(TimeSpan.FromSeconds(20));
                 _logger.LogInformation(
                 "Scoped Processing Service is working for SHOWSSERVICE");
-                var factory = new ConnectionFactory() { HostName = "localhost", Port = 5672, DispatchConsumersAsync = true, 
-                    AutomaticRecoveryEnabled = true, NetworkRecoveryInterval = TimeSpan.FromSeconds(15) };
+                var factory = new ConnectionFactory()
+                {
+                    HostName = "rabbitmq",
+                    Port = 5672,
+                    DispatchConsumersAsync = true,
+                    AutomaticRecoveryEnabled = true,
+                    NetworkRecoveryInterval = TimeSpan.FromSeconds(15)
+                };
                 IConnection connection = factory.CreateConnection();
                 IModel channel = connection.CreateModel();
                 channel.ExchangeDeclare(exchange: "topic_exchange", type: "topic");         //EXCHANGE creation
@@ -50,16 +56,17 @@ namespace ShowsService.Rabbit
 
                 Console.WriteLine(" [*] Waiting for messages. To exit press CTRL+C");
 
-                var consumer = new EventingBasicConsumer(channel);
+                var consumer = new AsyncEventingBasicConsumer(channel);
                 consumer.Received += async (model, ea) =>                                     //MESSAGE RECEIVING HANDLER
                 {
+                    Console.WriteLine("[!!!RECEIVING RECEIVING!!!]");
                     var body = ea.Body.ToArray();
                     var message = Encoding.UTF8.GetString(body);
                     var routingKey = ea.RoutingKey;
 
                     List<ShowDTO> trendingShows = JsonConvert.DeserializeObject<List<ShowDTO>>(message);//TODO: Alles  behalve title en url is null maar in message niet???
 
-                        await cache.SetShowAsync<String>(trendingShows[0].Media_type.GenerateKey(), message, TimeSpan.FromHours(24), TimeSpan.FromHours(24));
+                    await cache.SetShowAsync<String>(trendingShows[0].Media_type.GenerateKey(), message, TimeSpan.FromHours(24), TimeSpan.FromHours(24));
 
                     Console.WriteLine(" [x] Received '{0}':'{1}'",
                                       routingKey,

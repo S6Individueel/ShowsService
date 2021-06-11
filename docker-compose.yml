@@ -1,0 +1,77 @@
+﻿version: '3.4'
+services:
+    ##################################
+    ##         Services             ##
+    ##################################
+    showsservice:
+        container_name: "showsservice"
+        hostname: "showsservice"
+        image: matchflix/showsservice:latest
+        restart: on-failure
+        ports: 
+            - "5005:80"
+        depends_on: 
+            - "rabbitmq"
+            - "redis"
+
+
+    animeservice:
+        container_name: "animeservice"
+        hostname: "animeservice"
+        image: matchflix/animeservice:latest
+        restart: on-failure
+        ports: 
+            - "5031:80"
+        depends_on: 
+            - "rabbitmq"
+            - "showsservice"
+
+    omdbservice:
+        container_name: "omdbservice"
+        hostname: "omdbservice"
+        image: matchflix/omdbservice:latest
+        restart: on-failure
+        ports: 
+            - "5011:80"
+        depends_on: 
+            - "rabbitmq"
+            - "showsservice"
+    ##################################
+    ##            Cache             ##
+    ##################################
+    redis:
+        container_name: "redis"
+        hostname: "redis"
+        image: redis:latest
+        ports:
+            - "6379:6379"
+        environment: 
+            - ALLOW_EMPTY_PASSWORD=yes
+
+    ##################################
+    ##         Messaging            ##
+    ##################################
+    rabbitmq:
+        container_name: "rabbitmq"
+        hostname: "rabbitmq"
+        image: rabbitmq:3-management
+        ports:
+            - "5672:5672"
+            - "15672:15672"
+        restart: always
+        healthcheck:
+            test: [ "CMD", "nc", "-z", "localhost", "5672" ]
+            interval: 5s
+            timeout: 15s
+            retries: 1
+
+    ##################################
+    ##         Gateway              ##
+    ##################################
+    gateway:
+        container_name: "apigateway"
+        hostname: "apigateway"
+        image: matchflix/apigateway:latest
+        restart: on-failure
+        ports:
+            - "5021:80"
