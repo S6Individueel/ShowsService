@@ -25,8 +25,8 @@ namespace ShowsService
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IShowRepository, ShowRepository>();
-/*            services.AddHostedService<ConsumeScopedServiceHostedService>();
-            services.AddScoped<IScopedProcessingService, ScopedProcessingService>();*/
+            services.AddHostedService<ConsumeScopedServiceHostedService>();
+            services.AddScoped<IScopedProcessingService, ScopedProcessingService>();
             services.AddHttpClient<IShowRepository, ShowRepository>();
             services.AddMemoryCache();
             services.AddControllers(options => {
