@@ -6,7 +6,7 @@ services:
     showsservice:
         container_name: "showsservice"
         hostname: "showsservice"
-        image: matchflix/showsservice:latest
+        image: matchflix/showsservice2:latest
         restart: on-failure
         ports: 
             - "5005:80"

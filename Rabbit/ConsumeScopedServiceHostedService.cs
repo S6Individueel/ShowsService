@@ -27,7 +27,7 @@ namespace ShowsService.Rabbit
         {
             _logger.LogInformation(
                 "Consume Scoped Service Hosted Service running.");
-
+            await Task.Yield();
             await DoWork(stoppingToken);
         }
 

@@ -29,13 +29,13 @@ namespace ShowsService.Repositories
             return result;
         }
 
-        public async Task<string> SetShowAsync(string id)
+        public async Task<string> SetShowAsync(string id, string shows)
         {
             var result = await cache.GetShowAsync<String>(id);
 
             if (result is null)
             {
-                await cache.SetShowAsync(id, result);
+                await cache.SetShowAsync(id, shows);
             }
             else
             {
@@ -53,6 +53,13 @@ namespace ShowsService.Repositories
             IList<ShowDTO> showList = JsonConvert.DeserializeObject<List<ShowDTO>>(result);
 
             return showList;
+        }
+
+        public async Task<IList<ShowDTO>> HandleRedisFailure()
+        {
+            List<ShowDTO> shows = new List<ShowDTO>();
+
+            return shows;
         }
     }
 }

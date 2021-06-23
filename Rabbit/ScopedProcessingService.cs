@@ -66,7 +66,14 @@ namespace ShowsService.Rabbit
 
                     List<ShowDTO> trendingShows = JsonConvert.DeserializeObject<List<ShowDTO>>(message);//TODO: Alles  behalve title en url is null maar in message niet???
 
-                    await cache.SetShowAsync<String>(trendingShows[0].Media_type.GenerateKey(), message, TimeSpan.FromHours(24), TimeSpan.FromHours(24));
+                    try
+                    {
+                        await cache.SetShowAsync<String>(trendingShows[0].Media_type.GenerateKey(), message, TimeSpan.FromHours(24), TimeSpan.FromHours(24));
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogError("Redis Cache Exception: ", ex.Message);
+                    }
 
                     Console.WriteLine(" [x] Received '{0}':'{1}'",
                                       routingKey,
