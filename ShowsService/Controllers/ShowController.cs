@@ -1,4 +1,4 @@
-﻿using AnimeService.DTOs;
+﻿using ShowsService.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;

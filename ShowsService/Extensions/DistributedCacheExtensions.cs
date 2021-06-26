@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Caching.Distributed;
+using ShowsService.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,6 +42,30 @@ namespace ShowsService.Extensions
             { return "Movie"; }
 
             return "";
+        }
+        public static ShowDTO AsShowDTO(this TopMovie show)
+        {
+            return new ShowDTO
+            {
+                Id = show.id,
+                Title = show.title,
+                Media_type = show.media_type,
+                Description = show.overview,
+                Release_date = show.release_date,
+                Image_url = "https://image.tmdb.org/t/p/w500/" + show.poster_path
+            };
+        }
+        public static ShowDTO AsShowDTO(this TopAnime show)
+        {
+            return new ShowDTO
+            {
+                Id = show.mal_id,
+                Title = show.title,
+                Media_type = show.type,
+                Description = "To be implemented",
+                Release_date = show.start_date,
+                Image_url = show.image_url
+            };
         }
     }
 }
